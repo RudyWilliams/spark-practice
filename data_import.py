@@ -1,4 +1,7 @@
-# one wau to read csv into spark dataframe
+from pyspark.sql.types import StructField, StructType, IntegerType, StringType
+
+## one way to read csv into spark dataframe
+
 # movies_df = (
 #     spark.read.format("csv")
 #     .schema(movies_schema)
@@ -20,33 +23,32 @@ def read_csv_into_pyspark(spark_sess, schema, path, header, sep):
     )
 
 
+# define schema for movies and ratings dfs
+movies_schema = StructType(
+    [
+        StructField(name="movie_id", dataType=IntegerType(), nullable=False),
+        StructField(name="title", dataType=StringType(), nullable=True),
+        StructField(name="genres", dataType=StringType(), nullable=True),
+    ]
+)
+
+ratings_schema = StructType(
+    [
+        StructField(name="user_id", dataType=IntegerType(), nullable=False),
+        StructField(name="movie_id", dataType=IntegerType(), nullable=False),
+        StructField(name="rating", dataType=IntegerType(), nullable=True),
+        StructField(name="timestamp", dataType=IntegerType(), nullable=True),
+    ]
+)
+
 if __name__ == "__main__":
     from pyspark.sql import SparkSession
-    from pyspark.sql.types import StructField, StructType, IntegerType, StringType
 
     # from pyspark import SparkContext
     # sc = SparkContext()
     # spark = SparkSession(sc)
 
     spark = SparkSession.builder.getOrCreate()
-
-    # define schema for movies and ratings dfs
-    movies_schema = StructType(
-        [
-            StructField(name="movie_id", dataType=IntegerType(), nullable=False),
-            StructField(name="title", dataType=StringType(), nullable=True),
-            StructField(name="genres", dataType=StringType(), nullable=True),
-        ]
-    )
-
-    ratings_schema = StructType(
-        [
-            StructField(name="user_id", dataType=IntegerType(), nullable=False),
-            StructField(name="movie_id", dataType=IntegerType(), nullable=False),
-            StructField(name="rating", dataType=IntegerType(), nullable=True),
-            StructField(name="timestamp", dataType=IntegerType(), nullable=True),
-        ]
-    )
 
     movies_df = read_csv_into_pyspark(
         spark_sess=spark,

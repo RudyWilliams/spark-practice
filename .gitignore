@@ -1,2 +1,3 @@
 .vscode/
 pyspark-venv/
+__pycache__/
